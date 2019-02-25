@@ -30,6 +30,7 @@ void Exec_Init(void){
     ExecTaskList[1] = TIM2_Task;
 		ExecTaskList[2] = CLI_AddByte;
 		ExecTaskList[3] = CLI_ProcessCommand;
+		ExecTaskList[4] = Watchdog_wait;
     
     return;
 }

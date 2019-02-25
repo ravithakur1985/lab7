@@ -24,6 +24,7 @@ INCLUDES
 #include "stm32f3_EXEC.h"
 #include "cli.h"
 #include "stm32f3_Flash.h"
+#include "stm32f3_Watchdog.h"
 
 /*******************************************************************************
 
@@ -50,6 +51,7 @@ static void     cli_help(const uint8_t * cli_string);
 static void     cli_set_memory(const uint8_t * cli_string);
 static void     cli_get_memory(const uint8_t * cli_string);
 static void     cli_erase_flash(const uint8_t * cli_string);
+static void     cli_watchdog_trigger(const uint8_t * cli_string);
 static uint8_t  cli_list_init(uint8_t index, const uint8_t * string, uint8_t size, const uint8_t * help, CLICMDFuncPtr fptr);
 
 static uint8_t  is_dec_num(uint8_t src);
@@ -337,12 +339,12 @@ void cli_set_memory(const uint8_t * cli_string){
         tmpData = data >> 16;
         //write the other 16 bits
         if (FlashWrite16(tmpPtr, (uint16_t)tmpData) == 1){
-          printf("\r\nFLASH Write SUCCESSFUL");
+          printf("FLASH Write SUCCESSFUL");
         } else {
-          printf("\r\nFLASH Write FAILED");
+          printf("FLASH Write FAILED");
         }
       } else {
-        printf("\r\nFLASH Write FAILED");
+        printf("FLASH Write FAILED");
       }
     } else {
 	  p = (uint32_t *) ptr;
@@ -372,12 +374,27 @@ void cli_erase_flash(const uint8_t * cli_string){
     if ((FLASH_BASE < ptr) && (ptr < (FLASH_BASE+0x00400000))){
       //erase flash page
       if (FlashErasePage(ptr) == 1){
-        printf("\r\nFLASH Erase SUCCESSFUL");
+        printf("FLASH Erase SUCCESSFUL");
       } else {
-        printf("\r\nFLASH Erase FAILED");
+        printf("FLASH Erase FAILED");
       }
     }
 
+	return;
+}
+
+/*******************************************************************************
+This function triggers the watchdog reset to occur
+
+\param[in] cli_string the string to parse for command information
+
+\retval None
+
+\warning There is NO checking on the pointer field.  
+
+******************************************************************************/
+void cli_watchdog_trigger(const uint8_t * cli_string){
+	Watchdog_Trigger();
 	return;
 }
 
@@ -589,7 +606,8 @@ void CLI_Init(void){
 	cli_list_init(0,  "help",           4, "Prints out a list of all commands", &cli_help);
 	cli_list_init(1,  "getmemory",      9, "Gets data from address: get memory <address>", &cli_get_memory);
 	cli_list_init(2,  "setmemory",      9, "Sets data to address: set memory <address> <data>", &cli_set_memory);
-	cli_list_init(3,  "eraseflash",     10, "Erases FLASH page : erase flash <page>", &cli_erase_flash);
+	cli_list_init(3,  "eraseflash",    10, "Erases FLASH page : erase flash <page>", &cli_erase_flash);
+	cli_list_init(4,  "watchdog",       8, "Triggers watchdog reset : watchdog", &cli_watchdog_trigger);
 	cli_list_init(CLI_MAX_COMMANDS-1, ASCII_NULL,  0, ASCII_NULL, NULL);  //ALWAYS THE LAST ONE!
 
 	//

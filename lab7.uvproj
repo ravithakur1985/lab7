@@ -460,6 +460,11 @@
               <FileType>1</FileType>
               <FilePath>.\stm32f3_UART.c</FilePath>
             </File>
+            <File>
+              <FileName>stm32f3_Watchdog.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\stm32f3_Watchdog.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

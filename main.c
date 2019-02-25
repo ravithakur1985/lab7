@@ -12,17 +12,26 @@
 #include "stm32f3_GeneralTImer2.h"
 #include "stm32f3_UART.h"
 #include "cli.h"
+#include "stm32f3_Watchdog.h"
+#include "stdio.h"
 
 
 int main (void){
 	
-	// running the init commands
+	// running the init commands	
 	LEDS_Init();
 	Exec_Init();	
 	Button_Init();
 	TIM2_Init();
 	UART_Init();
 	CLI_Init();
+	
+	if (Watchdog_POR()){
+		printf("Watchdog Reset\n");
+		printf("\n\rRaviThakur>");
+	}
+	
+	Watchdog_Init();
 	__enable_irq();	
 	
 	// starting the executive
