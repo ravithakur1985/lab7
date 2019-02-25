@@ -21,6 +21,7 @@ void UART_Init(void){
 	GPIOA->MODER |= GPIO_MODER_MODER2_1;
 	GPIOA->MODER |= GPIO_MODER_MODER3_1;	
 	// set alternate funcion as USART for GPIOS PA2 & PA3
+	// PA2 USART2_TX and PA3 USART2_RX
 	GPIOA->AFR[0] |= 0x7700;
 	// configure BAUD rate
 	// 36000000/115200 = 'd312 or 'h138
